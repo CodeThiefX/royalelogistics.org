@@ -333,43 +333,41 @@ mod tempor  ut labore et dolore magna aliqua.   -->
 
 					base('Order Details').find(orderNumber, function (err, record) {
 						if (err) { console.error(err); return; }
-						const createdTime = record._rawJson.createdTime;
 						const fields = record.fields;
-						const recordId = record.id;
 
 						// Create an HTML table to display the record values
 						const table = `
 							<table>
-							<tr>
-								<td>Sender's Name</td>
+							<tr style="padding:30px;">
+								<td style="color:red;">Sender's Name</td>
 								<td>${fields.SenderName}</td>
 							</tr>
-							<tr>
-								<td>Sender's Phone Number</td>
+							<tr style="padding:30px;">
+								<td style="color:red;">Sender's Phone Number</td>
 								<td>${fields.SenderPhoneNumber}</td>
 							</tr>
-							<tr>
-								<td>Receiver's Name</td>
+							<tr style="padding:30px;">
+								<td style="color:red;">Receiver's Name</td>
 								<td>${fields.ReceiverName}</td>
 							</tr>
-							<tr>
-								<td>Receiver's Phone Number</td>
+							<tr style="padding:30px;">
+								<td style="color:red;">Receiver's Phone Number</td>
 								<td>${fields.ReceiverPhoneNumber}</td>
 							</tr>
-							<tr>
-								<td>Product Name</td>
+							<tr style="padding:30px;">
+								<td style="color:red;">Product Name</td>
 								<td>${fields.ProductName}</td>
 							</tr>
-							<tr>
-								<td>Product Quantity</td>
+							<tr style="padding:30px;">
+								<td style="color:red;">Product Quantity</td>
 								<td>${fields.ProductQuantity}</td>
 							</tr>
-							<tr>
-								<td>Delivery Location</td>
+							<tr style="padding:30px;">
+								<td style="color:red;">Delivery Location</td>
 								<td>${fields.DeliveryLocation}</td>
 							</tr>
-							<tr>
-								<td>Delivery Date</td>
+							<tr style="padding:30px;">
+								<td style="color:red;">Delivery Date</td>
 								<td>${fields.DeliveryDate}</td>
 							</tr>
 							</table>
