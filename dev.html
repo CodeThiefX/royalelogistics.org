@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Order Form</title>
+    <!-- Include the jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+    <h1>Order Details</h1>
+    <form id="orderForm">
+        <label for="customerName">Customer Name:</label>
+        <input type="text" id="customerName" required><br>
+
+        <label for="product">Product:</label>
+        <input type="text" id="product" required><br>
+
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" required><br>
+
+        <label for="location">Delivery Location:</label>
+        <input type="text" id="location" required><br>
+
+        <label for="date">Date:</label>
+        <input type="date" id="date" required><br>
+
+        <button type="button" id="submitOrder">Submit Order</button>
+    </form>
+
+    <script>
+        // Wrap your JavaScript code in a DOMContentLoaded event listener
+        document.addEventListener('DOMContentLoaded', function () {
+            const orders = [];
+
+            document.getElementById('submitOrder').addEventListener('click', function () {
+                const customerName = document.getElementById('customerName').value;
+                const product = document.getElementById('product').value;
+                const quantity = document.getElementById('quantity').value;
+                const location = document.getElementById('location').value;
+                const date = document.getElementById('date').value;
+
+                const trackingId = generateUniqueTrackingId();
+                const order = { trackingId, customerName, product, quantity, location, date };
+                orders.push(order);
+
+                generatePDF(order);
+            });
+
+            function generateUniqueTrackingId() {
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+                const idLength = 12;
+
+                while (true) {
+                    let trackingId = '';
+                    for (let i = 0; i < idLength; i++) {
+                        const randomIndex = Math.floor(Math.random() * characters.length);
+                        trackingId += characters.charAt(randomIndex);
+                    }
+
+                    // Check if the tracking ID is unique
+                    if (!orders.some(order => order.trackingId === trackingId)) {
+                        return trackingId;
+                    }
+                }
+            }
+
+            function generatePDF(order) {
+                const doc = new jsPDF();
+
+                doc.setFontSize(18);
+                doc.setTextColor('red');
+                doc.text('Order Receipt', 105, 15, { align: 'center' });
+
+                doc.setFontSize(12);
+                doc.setTextColor('black');
+                doc.text(`Tracking ID: ${order.trackingId}`, 10, 30);
+                doc.text(`Customer Name: ${order.customerName}`, 10, 40);
+                doc.text(`Product: ${order.product}`, 10, 50);
+                doc.text(`Quantity: ${order.quantity}`, 10, 60);
+                doc.text(`Delivery Location: ${order.location}`, 10, 70);
+                doc.text(`Date: ${order.date}`, 10, 80);
+
+                doc.save('receipt.pdf');
+            }
+        });
+    </script>
+</body>
+
+</html>

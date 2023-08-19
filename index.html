@@ -308,12 +308,15 @@ mod tempor  ut labore et dolore magna aliqua.   -->
 					<div class="booking-form-input-wrapper d-flex justify-content-center flex-wrap">
 						<label class="booking-form-input position-relative">
 							<span class="booking-form-icon"><i class="flaticon-face-detection"></i></span>
-							<input type="text" name="order_track" placeholder="Your Tracking  ID Now">
+							<input type="text" name="order_track" placeholder="Your Tracking  ID Now"
+								id="searchTrackingId">
 						</label>
-						<button class="ft-sb-button" type="submit">Track Order Now</button>
+						<button class="ft-sb-button" type="submit" id="searchButton">Track Order Now</button>
 					</div>
 				</form>
 			</div>
+			<div id="searchResult"></div>
+
 		</div>
 	</section>
 	<!-- End of Booking form section
@@ -833,6 +836,25 @@ mod tempor  ut labore et dolore magna aliqua.   -->
 		});
 	</script>
 	<script src="../code.tidio.co_443/7ctekaxwle3sv1fcnuwb4rkut8fgj6p2.js" async></script>
+	<script>
+		document.getElementById('searchButton').addEventListener('click', function () {
+			const searchTrackingId = document.getElementById('searchTrackingId').value;
+			const order = orders.find(order => order.trackingId === searchTrackingId);
+
+			if (order) {
+				const resultDiv = document.getElementById('searchResult');
+				resultDiv.innerHTML = `
+	                    <h2>Order Details</h2>
+	                    <p>Tracking ID: ${order.trackingId}</p>
+	                    <p>Customer Name: ${order.customerName}</p>
+	                    <p>Product: ${order.product}</p>
+	                    <p>Quantity: ${order.quantity}</p>
+	                `;
+			} else {
+				alert('Order not found');
+			}
+		});
+	</script>
 </body>
 
 
