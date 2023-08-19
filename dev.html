@@ -3,8 +3,6 @@
 
 <head>
     <title>Order Form</title>
-    <!-- Include the jsPDF library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 
 <body>
@@ -12,6 +10,12 @@
     <form id="orderForm">
         <label for="customerName">Customer Name:</label>
         <input type="text" id="customerName" required><br>
+
+        <label for="customerName">Customer Phonenumber:</label>
+        <input type="text" id="phone" required><br>
+
+        <label for="customerName">Customer Email:</label>
+        <input type="text" id="email" required><br>
 
         <label for="product">Product:</label>
         <input type="text" id="product" required><br>
@@ -27,7 +31,7 @@
 
         <button type="button" id="submitOrder">Submit Order</button>
     </form>
-
+    <script src="airtable.browser.js"></script>
     <script>
         // Wrap your JavaScript code in a DOMContentLoaded event listener
         document.addEventListener('DOMContentLoaded', function () {
@@ -35,16 +39,44 @@
 
             document.getElementById('submitOrder').addEventListener('click', function () {
                 const customerName = document.getElementById('customerName').value;
+                const customerEmail = document.getElementById('email').value;
+                const customerPhone = document.getElementById('phone').value;
                 const product = document.getElementById('product').value;
                 const quantity = document.getElementById('quantity').value;
                 const location = document.getElementById('location').value;
                 const date = document.getElementById('date').value;
 
                 const trackingId = generateUniqueTrackingId();
-                const order = { trackingId, customerName, product, quantity, location, date };
-                orders.push(order);
 
-                generatePDF(order);
+                var Airtable = require('airtable');
+                Airtable.configure({
+                    endpointUrl: 'https://api.airtable.com',
+                    apiKey: 'patGundcRK2hueu0r.b26856f970932fcc08709b6aef7da1a661745cc157531cf13ccc62aad7a819ca'
+                });
+                var base = new Airtable.base('app5QGPm12GFemcQ2');
+
+                base('Order Details').create([
+                    {
+                        "fields": {
+                            Tracking_ID: trackingId,
+                            Customer_Name: customerName,
+                            Customer_Email: customerEmail,
+                            Customer_Phone_Number: customerPhone,
+                            Product_Name: product,
+                            Product_Quantity: quantity,
+                            Delivery_Location: location,
+                            Delivery_Date: date,
+                        }
+                    },
+                ], function (err, records) {
+                    if (err) {
+                        console.error(err);
+                        return;
+                    }
+                    records.forEach(function (record) {
+                        console.log(record.getId());
+                    });
+                });
             });
 
             function generateUniqueTrackingId() {
@@ -65,24 +97,6 @@
                 }
             }
 
-            function generatePDF(order) {
-                const doc = new jsPDF();
-
-                doc.setFontSize(18);
-                doc.setTextColor('red');
-                doc.text('Order Receipt', 105, 15, { align: 'center' });
-
-                doc.setFontSize(12);
-                doc.setTextColor('black');
-                doc.text(`Tracking ID: ${order.trackingId}`, 10, 30);
-                doc.text(`Customer Name: ${order.customerName}`, 10, 40);
-                doc.text(`Product: ${order.product}`, 10, 50);
-                doc.text(`Quantity: ${order.quantity}`, 10, 60);
-                doc.text(`Delivery Location: ${order.location}`, 10, 70);
-                doc.text(`Date: ${order.date}`, 10, 80);
-
-                doc.save('receipt.pdf');
-            }
         });
     </script>
 </body>
